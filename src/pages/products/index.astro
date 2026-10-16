@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import { categoryUrl, getCategories, getProducts } from '../../lib/content';
+
+const categories = await getCategories();
+const products = await getProducts();
+const groups = categories
+	.map((category) => ({ category, items: products.filter((p) => p.data.category.id === category.id) }))
+	.filter((g) => g.items.length > 0);
+---
+
+<BaseLayout title="Products" description="Browse our full range of products and specifications.">
+	<div class="container">
+		<Breadcrumb items={[{ label: 'Products' }]} />
+		<h1>Products</h1>
+		{
+			groups.map(({ category, items }) => (
+				<section class="section">
+					<h2 class="section-title">
+						<a href={categoryUrl(category.id)}>{category.data.name}</a>
+					</h2>
+					<div class="grid">
+						{items.map((p) => (
+							<ProductCard product={p} />
+						))}
+					</div>
+				</section>
+			))
+		}
+	</div>
+</BaseLayout>
+
+<style>
+	.section-title a {
+		color: inherit;
+		text-decoration: none;
+	}
+	.section-title a:hover {
+		color: var(--color-primary);
+	}
+</style>

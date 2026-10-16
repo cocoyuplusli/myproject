@@ -1,0 +1,42 @@
+---
+import type { GetStaticPaths } from 'astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../../components/Breadcrumb.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import { getCategories, getProducts } from '../../../lib/content';
+
+export const getStaticPaths = (async () => {
+	const categories = await getCategories();
+	return categories.map((category) => ({ params: { category: category.id }, props: { category } }));
+}) satisfies GetStaticPaths;
+
+const { category } = Astro.props;
+const products = await getProducts((p) => p.data.category.id === category.id);
+---
+
+<BaseLayout title={category.data.name} description={category.data.description}>
+	<div class="container">
+		<Breadcrumb items={[{ label: 'Products', href: '/products/' }, { label: category.data.name }]} />
+		<h1>{category.data.name}</h1>
+		{category.data.description && <p class="lead">{category.data.description}</p>}
+		<div class="section">
+			{
+				products.length > 0 ? (
+					<div class="grid">
+						{products.map((p) => (
+							<ProductCard product={p} />
+						))}
+					</div>
+				) : (
+					<p>Products in this category are coming soon. Please contact us for details.</p>
+				)
+			}
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.lead {
+		color: var(--color-muted);
+	}
+</style>

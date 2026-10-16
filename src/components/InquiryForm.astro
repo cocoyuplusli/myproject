@@ -1,0 +1,93 @@
+---
+import site from '../data/site.json';
+
+interface Props {
+	/** 产品页传入产品名，会写进邮件标题和隐藏字段 */
+	product?: string;
+}
+
+const { product } = Astro.props;
+const subject = product ? `New inquiry: ${product}` : `New inquiry from ${site.shortName} website`;
+const pageUrl = new URL(Astro.url.pathname, Astro.site).href;
+// Web3Forms 免费档要求完整 URL 且与提交页同域；这里是无 JS 时的兜底，下方脚本会改成当前域名
+const redirect = new URL('/thanks/', Astro.site).href;
+---
+
+<form class="form" action="https://api.web3forms.com/submit" method="POST" id="inquiry">
+	<input type="hidden" name="access_key" value={site.web3formsKey} />
+	<input type="hidden" name="subject" value={subject} />
+	<input type="hidden" name="from_name" value={`${site.shortName} Website`} />
+	<input type="hidden" name="redirect" value={redirect} />
+	<input type="hidden" name="page_url" value={pageUrl} />
+	{product && <input type="hidden" name="product" value={product} />}
+	<input type="checkbox" name="botcheck" class="sr-only" style="display: none;" tabindex="-1" autocomplete="off" />
+
+	<div class="form__row">
+		<label>
+			Name *
+			<input type="text" name="name" required autocomplete="name" />
+		</label>
+		<label>
+			Email *
+			<input type="email" name="email" required autocomplete="email" />
+		</label>
+	</div>
+	<div class="form__row">
+		<label>
+			Company
+			<input type="text" name="company" autocomplete="organization" />
+		</label>
+		<label>
+			Country
+			<input type="text" name="country" autocomplete="country-name" />
+		</label>
+	</div>
+	<label>
+		Message *
+		<textarea name="message" rows="5" required
+			>{product ? `I'm interested in ${product}. Please send me a quotation.` : ''}</textarea
+		>
+	</label>
+	<button type="submit" class="btn">Send Inquiry</button>
+</form>
+
+<script>
+	document.querySelectorAll<HTMLInputElement>('input[name="redirect"]').forEach((el) => {
+		el.value = new URL('/thanks/', location.origin).href;
+	});
+</script>
+
+<style>
+	.form {
+		display: grid;
+		gap: 16px;
+	}
+	.form__row {
+		display: grid;
+		gap: 16px;
+		grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	}
+	label {
+		display: grid;
+		gap: 6px;
+		font-weight: 600;
+		font-size: 0.9rem;
+	}
+	input,
+	textarea {
+		width: 100%;
+		padding: 10px 12px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		font: inherit;
+		font-weight: 400;
+	}
+	input:focus,
+	textarea:focus {
+		outline: 2px solid var(--color-primary);
+		outline-offset: -1px;
+	}
+	.btn {
+		justify-self: start;
+	}
+</style>

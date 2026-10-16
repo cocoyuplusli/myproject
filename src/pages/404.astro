@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Page Not Found" noindex>
+	<div class="container">
+		<div class="message">
+			<h1>Page not found</h1>
+			<p>The page you are looking for may have been moved or removed.</p>
+			<p><a class="btn" href="/products/">Browse Products</a></p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.message {
+		max-width: 720px;
+		padding-top: 64px;
+		padding-bottom: 32px;
+	}
+</style>

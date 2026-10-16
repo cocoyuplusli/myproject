@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import InquiryForm from '../components/InquiryForm.astro';
+import WhatsAppButton from '../components/WhatsAppButton.astro';
+import site from '../data/site.json';
+---
+
+<BaseLayout title="Contact Us" description={`Contact ${site.name} for quotations, samples and datasheets.`}>
+	<div class="container">
+		<Breadcrumb items={[{ label: 'Contact' }]} />
+		<h1>Contact Us</h1>
+		<div class="contact">
+			<div>
+				<dl class="contact__info">
+					<dt>Email</dt>
+					<dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+					<dt>WhatsApp</dt>
+					<dd>{site.whatsappDisplay}</dd>
+					<dt>Address</dt>
+					<dd>{site.address}</dd>
+				</dl>
+				<WhatsAppButton text="Hi, I'd like to know more about your products." />
+			</div>
+			<div>
+				<h2>Send us a message</h2>
+				<InquiryForm />
+			</div>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.contact {
+		display: grid;
+		gap: 40px;
+		grid-template-columns: minmax(0, 1fr);
+		padding-bottom: 24px;
+	}
+	@media (min-width: 900px) {
+		.contact {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+		}
+	}
+	.contact h2 {
+		margin-top: 0;
+	}
+	.contact__info dt {
+		font-weight: 700;
+	}
+	.contact__info dd {
+		margin: 0 0 16px;
+		color: var(--color-muted);
+	}
+</style>

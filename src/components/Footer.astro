@@ -1,0 +1,55 @@
+---
+import site from '../data/site.json';
+import { whatsappUrl } from '../lib/content';
+---
+
+<footer class="footer">
+	<div class="container footer__inner">
+		<div>
+			<p class="footer__name">{site.name}</p>
+			<p>{site.address}</p>
+		</div>
+		<ul class="footer__contact">
+			<li>Email: <a href={`mailto:${site.email}`}>{site.email}</a></li>
+			<li>
+				WhatsApp: <a href={whatsappUrl()} target="_blank" rel="noopener">{site.whatsappDisplay}</a>
+			</li>
+		</ul>
+	</div>
+	<div class="container footer__copy">© {new Date().getFullYear()} {site.name}. All rights reserved.</div>
+</footer>
+
+<style>
+	.footer {
+		margin-top: 48px;
+		padding: 32px 0 16px;
+		background: #1d232b;
+		color: #c9cfd6;
+		font-size: 0.95rem;
+	}
+	.footer a {
+		color: #fff;
+	}
+	.footer__inner {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		gap: 16px 48px;
+	}
+	.footer__name {
+		margin-top: 0;
+		color: #fff;
+		font-weight: 700;
+	}
+	.footer__contact {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.footer__copy {
+		margin-top: 24px;
+		padding-top: 16px;
+		border-top: 1px solid #343c47;
+		font-size: 0.85rem;
+	}
+</style>

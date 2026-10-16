@@ -1,0 +1,96 @@
+---
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+	images: ImageMetadata[];
+	alt: string;
+}
+
+const { images, alt } = Astro.props;
+const sizes = '(min-width: 900px) 560px, 100vw';
+const mains = await Promise.all(images.map((src) => getImage({ src, widths: [480, 800, 1200], format: 'webp' })));
+const thumbs = await Promise.all(images.map((src) => getImage({ src, width: 120, height: 120, format: 'webp' })));
+---
+
+<div class="gallery" data-gallery>
+	<img
+		class="gallery__main"
+		src={mains[0].src}
+		srcset={mains[0].srcSet.attribute}
+		sizes={sizes}
+		alt={alt}
+		width={mains[0].attributes.width}
+		height={mains[0].attributes.height}
+		fetchpriority="high"
+		data-main
+	/>
+	{
+		images.length > 1 && (
+			<ul class="gallery__thumbs">
+				{thumbs.map((t, i) => (
+					<li>
+						<a
+							href={mains[i].src}
+							data-src={mains[i].src}
+							data-srcset={mains[i].srcSet.attribute}
+							aria-current={i === 0 ? 'true' : undefined}
+						>
+							<img src={t.src} alt={`${alt} - image ${i + 1}`} width="120" height="120" loading="lazy" />
+						</a>
+					</li>
+				))}
+			</ul>
+		)
+	}
+</div>
+
+<script>
+	// 点缩略图切换主图；没有 JS 时缩略图是普通链接，点开看大图
+	document.querySelectorAll<HTMLElement>('[data-gallery]').forEach((gallery) => {
+		const main = gallery.querySelector<HTMLImageElement>('[data-main]')!;
+		const links = gallery.querySelectorAll<HTMLAnchorElement>('[data-src]');
+		links.forEach((link) => {
+			link.addEventListener('click', (e) => {
+				e.preventDefault();
+				main.srcset = link.dataset.srcset ?? '';
+				main.src = link.dataset.src!;
+				links.forEach((l) => l.removeAttribute('aria-current'));
+				link.setAttribute('aria-current', 'true');
+			});
+		});
+	});
+</script>
+
+<style>
+	.gallery__main {
+		width: 100%;
+		aspect-ratio: 1;
+		object-fit: contain;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		background: var(--color-bg-soft);
+	}
+	.gallery__thumbs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin: 12px 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.gallery__thumbs a {
+		display: block;
+		border: 2px solid transparent;
+		border-radius: var(--radius);
+		overflow: hidden;
+	}
+	.gallery__thumbs a[aria-current='true'] {
+		border-color: var(--color-primary);
+	}
+	.gallery__thumbs img {
+		width: 72px;
+		height: 72px;
+		object-fit: cover;
+	}
+</style>

@@ -1,0 +1,41 @@
+---
+interface Props {
+	/** 最后一项是当前页，不带 href */
+	items: { label: string; href?: string }[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="breadcrumb" aria-label="Breadcrumb">
+	<ol>
+		<li><a href="/">Home</a></li>
+		{
+			items.map((item) => (
+				<li>{item.href ? <a href={item.href}>{item.label}</a> : <span aria-current="page">{item.label}</span>}</li>
+			))
+		}
+	</ol>
+</nav>
+
+<style>
+	.breadcrumb {
+		padding: 16px 0;
+		font-size: 0.9rem;
+		color: var(--color-muted);
+	}
+	ol {
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	li + li::before {
+		content: '/';
+		margin: 0 8px;
+	}
+	a {
+		color: var(--color-muted);
+	}
+</style>

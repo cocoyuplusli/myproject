@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import site from '../data/site.json';
+import factory from '../assets/about/factory.jpg';
+---
+
+<BaseLayout title="About Us" description={site.about[0]}>
+	<div class="container">
+		<Breadcrumb items={[{ label: 'About Us' }]} />
+		<div class="about">
+			<h1>About {site.name}</h1>
+			{site.about.map((p) => <p>{p}</p>)}
+			<Image src={factory} alt={`${site.name} factory`} width={1200} class="about__img" />
+			<p><a class="btn" href="/contact/">Contact Us</a></p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.about {
+		max-width: 900px;
+	}
+	.about__img {
+		margin: 32px 0;
+		border-radius: var(--radius);
+	}
+</style>

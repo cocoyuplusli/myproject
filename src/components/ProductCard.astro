@@ -1,0 +1,60 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { productUrl } from '../lib/content';
+
+interface Props {
+	product: CollectionEntry<'products'>;
+}
+
+const { product } = Astro.props;
+const { title, summary, images } = product.data;
+---
+
+<a class="card" href={productUrl(product.id)}>
+	<Image src={images[0]} alt={title} width={480} height={480} class="card__img" />
+	<div class="card__body">
+		<h3 class="card__title">{title}</h3>
+		<p class="card__summary">{summary}</p>
+	</div>
+</a>
+
+<style>
+	.card {
+		display: flex;
+		flex-direction: column;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		overflow: hidden;
+		background: #fff;
+		color: var(--color-text);
+		text-decoration: none;
+	}
+	.card:hover {
+		border-color: var(--color-primary);
+	}
+	.card:hover .card__title {
+		color: var(--color-primary);
+	}
+	.card__img {
+		width: 100%;
+		aspect-ratio: 1;
+		object-fit: cover;
+	}
+	.card__body {
+		padding: 16px;
+	}
+	.card__title {
+		margin: 0 0 8px;
+		font-size: 1.05rem;
+	}
+	.card__summary {
+		margin: 0;
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>

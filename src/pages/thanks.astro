@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import site from '../data/site.json';
+---
+
+<BaseLayout title="Thank You" noindex>
+	<div class="container">
+		<div class="message">
+			<h1>Thank you for your inquiry!</h1>
+			<p>We have received your message and will reply within one business day.</p>
+			<p>
+				For urgent requests, email <a href={`mailto:${site.email}`}>{site.email}</a> or WhatsApp
+				{site.whatsappDisplay}.
+			</p>
+			<p><a class="btn" href="/products/">Back to Products</a></p>
+		</div>
+	</div>
+</BaseLayout>
+
+<style>
+	.message {
+		max-width: 720px;
+		padding-top: 64px;
+		padding-bottom: 32px;
+	}
+</style>

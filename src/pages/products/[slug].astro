@@ -1,0 +1,125 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getEntry, render } from 'astro:content';
+import { getImage } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import Gallery from '../../components/Gallery.astro';
+import SpecTable from '../../components/SpecTable.astro';
+import InquiryForm from '../../components/InquiryForm.astro';
+import WhatsAppButton from '../../components/WhatsAppButton.astro';
+import ProductCard from '../../components/ProductCard.astro';
+import site from '../../data/site.json';
+import { categoryUrl, getProducts } from '../../lib/content';
+
+export const getStaticPaths = (async () => {
+	const products = await getProducts();
+	return products.map((product) => ({ params: { slug: product.id }, props: { product } }));
+}) satisfies GetStaticPaths;
+
+const { product } = Astro.props;
+const { title, summary, images, specs } = product.data;
+const category = await getEntry(product.data.category);
+const { Content } = await render(product);
+const related = (
+	await getProducts((p) => p.data.category.id === product.data.category.id && p.id !== product.id)
+).slice(0, 4);
+
+const og = await getImage({ src: images[0], width: 1200, format: 'jpg' });
+const ogImage = new URL(og.src, Astro.site).href;
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Product',
+	name: title,
+	description: summary,
+	image: ogImage,
+	category: category.data.name,
+	brand: { '@type': 'Brand', name: site.shortName },
+	additionalProperty: specs.map((s) => ({ '@type': 'PropertyValue', name: s.name, value: s.value })),
+};
+---
+
+<BaseLayout title={title} description={summary} ogImage={ogImage}>
+	<script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+
+	<div class="container">
+		<Breadcrumb
+			items={[
+				{ label: 'Products', href: '/products/' },
+				{ label: category.data.name, href: categoryUrl(category.id) },
+				{ label: title },
+			]}
+		/>
+
+		<div class="product">
+			<Gallery images={images} alt={title} />
+			<div class="product__info">
+				<h1>{title}</h1>
+				<p class="product__summary">{summary}</p>
+				<SpecTable specs={specs} />
+				<div class="product__actions">
+					<a class="btn" href="#inquiry">Get a Quote</a>
+					<WhatsAppButton text={`Hi, I'm interested in ${title}.`} />
+				</div>
+			</div>
+		</div>
+
+		<section class="section">
+			<h2 class="section-title">Product Details</h2>
+			<div class="prose"><Content /></div>
+		</section>
+
+		<section class="section section--inquiry">
+			<h2 class="section-title">Send an Inquiry</h2>
+			<p>
+				Leave your requirements and we will reply within one business day. You can also email
+				<a href={`mailto:${site.email}`}>{site.email}</a>.
+			</p>
+			<InquiryForm product={title} />
+		</section>
+
+		{
+			related.length > 0 && (
+				<section class="section">
+					<h2 class="section-title">Related Products</h2>
+					<div class="grid">
+						{related.map((p) => (
+							<ProductCard product={p} />
+						))}
+					</div>
+				</section>
+			)
+		}
+	</div>
+</BaseLayout>
+
+<style>
+	.product {
+		display: grid;
+		gap: 32px;
+		grid-template-columns: minmax(0, 1fr);
+	}
+	@media (min-width: 900px) {
+		.product {
+			grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+			align-items: start;
+		}
+	}
+	.product__info h1 {
+		margin: 0 0 12px;
+		font-size: 1.75rem;
+	}
+	.product__summary {
+		margin: 0 0 20px;
+		color: var(--color-muted);
+	}
+	.product__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 24px;
+	}
+	.section--inquiry {
+		max-width: 760px;
+	}
+</style>

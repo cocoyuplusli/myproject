@@ -1,0 +1,22 @@
+---
+import { whatsappUrl } from '../lib/content';
+
+interface Props {
+	/** 预填到 WhatsApp 对话框里的消息 */
+	text?: string;
+}
+
+const { text } = Astro.props;
+---
+
+<a class="btn btn--whatsapp" href={whatsappUrl(text)} target="_blank" rel="noopener">Chat on WhatsApp</a>
+
+<style>
+	.btn--whatsapp {
+		border-color: var(--color-whatsapp);
+		background: var(--color-whatsapp);
+	}
+	.btn--whatsapp:hover {
+		background: #178a45;
+	}
+</style>

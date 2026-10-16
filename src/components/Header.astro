@@ -1,0 +1,75 @@
+---
+import site from '../data/site.json';
+
+const links = [
+	{ href: '/', label: 'Home' },
+	{ href: '/products/', label: 'Products' },
+	{ href: '/about/', label: 'About Us' },
+	{ href: '/contact/', label: 'Contact' },
+];
+const path = Astro.url.pathname;
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header class="header">
+	<div class="container header__inner">
+		<a class="header__logo" href="/">{site.shortName}</a>
+		<nav aria-label="Main">
+			<ul class="header__nav">
+				{
+					links.map((l) => (
+						<li>
+							<a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>
+								{l.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+	</div>
+</header>
+
+<style>
+	.header {
+		border-bottom: 1px solid var(--color-border);
+		background: #fff;
+	}
+	.header__inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px 24px;
+		min-height: 64px;
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
+	.header__logo {
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: var(--color-text);
+		text-decoration: none;
+	}
+	.header__nav {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px 20px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.header__nav a {
+		color: var(--color-text);
+		text-decoration: none;
+		font-weight: 500;
+	}
+	.header__nav a:hover,
+	.header__nav a[aria-current='page'] {
+		color: var(--color-primary);
+	}
+	.header__nav a[aria-current='page'] {
+		text-decoration: underline;
+		text-underline-offset: 6px;
+	}
+</style>

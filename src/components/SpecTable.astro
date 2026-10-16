@@ -1,0 +1,41 @@
+---
+interface Props {
+	specs: { name: string; value: string }[];
+}
+
+const { specs } = Astro.props;
+---
+
+<table class="specs">
+	<caption class="sr-only">Specifications</caption>
+	<tbody>
+		{
+			specs.map((s) => (
+				<tr>
+					<th scope="row">{s.name}</th>
+					<td>{s.value}</td>
+				</tr>
+			))
+		}
+	</tbody>
+</table>
+
+<style>
+	.specs {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.95rem;
+	}
+	th,
+	td {
+		padding: 10px 14px;
+		border: 1px solid var(--color-border);
+		text-align: left;
+		vertical-align: top;
+	}
+	th {
+		width: 45%;
+		background: var(--color-bg-soft);
+		font-weight: 600;
+	}
+</style>

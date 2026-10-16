@@ -1,0 +1,122 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductCard from '../components/ProductCard.astro';
+import site from '../data/site.json';
+import { categoryUrl, getCategories, getProducts } from '../lib/content';
+
+const featured = await getProducts((p) => p.data.featured);
+const categories = await getCategories();
+---
+
+<BaseLayout>
+	<section class="hero">
+		<div class="container">
+			<h1>{site.name}</h1>
+			<p class="hero__tagline">{site.tagline}</p>
+			<div class="hero__actions">
+				<a class="btn" href="/products/">View Products</a>
+				<a class="btn btn--outline hero__contact" href="/contact/">Contact Us</a>
+			</div>
+		</div>
+	</section>
+
+	{
+		featured.length > 0 && (
+			<section class="section">
+				<div class="container">
+					<h2 class="section-title">Featured Products</h2>
+					<div class="grid">
+						{featured.map((p) => (
+							<ProductCard product={p} />
+						))}
+					</div>
+				</div>
+			</section>
+		)
+	}
+
+	<section class="section section--soft">
+		<div class="container">
+			<h2 class="section-title">Product Categories</h2>
+			<div class="grid">
+				{
+					categories.map((c) => (
+						<a class="category" href={categoryUrl(c.id)}>
+							{c.data.cover && <Image src={c.data.cover} alt={c.data.name} width={600} height={400} />}
+							<span class="category__name">{c.data.name}</span>
+						</a>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+			<div class="about">
+				<h2 class="section-title">About Us</h2>
+				<p>{site.about[0]}</p>
+				<a class="btn btn--outline" href="/about/">Learn More</a>
+			</div>
+		</div>
+	</section>
+</BaseLayout>
+
+<style>
+	.hero {
+		padding: 72px 0;
+		background: var(--color-primary);
+		color: #fff;
+	}
+	.hero h1 {
+		margin: 0 0 12px;
+		font-size: clamp(1.8rem, 4vw, 2.6rem);
+	}
+	.hero__tagline {
+		max-width: 640px;
+		margin: 0 0 28px;
+		font-size: 1.15rem;
+		opacity: 0.9;
+	}
+	.hero__actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+	.hero .btn {
+		border-color: #fff;
+		background: #fff;
+		color: var(--color-primary);
+	}
+	.hero .hero__contact {
+		background: transparent;
+		color: #fff;
+	}
+	.category {
+		display: block;
+		border-radius: var(--radius);
+		overflow: hidden;
+		background: #fff;
+		border: 1px solid var(--color-border);
+		color: var(--color-text);
+		text-decoration: none;
+	}
+	.category:hover {
+		border-color: var(--color-primary);
+		color: var(--color-primary);
+	}
+	.category img {
+		width: 100%;
+		aspect-ratio: 3 / 2;
+		object-fit: cover;
+	}
+	.category__name {
+		display: block;
+		padding: 14px 16px;
+		font-weight: 600;
+	}
+	.about {
+		max-width: 800px;
+	}
+</style>
