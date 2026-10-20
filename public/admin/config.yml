@@ -1,0 +1,105 @@
+# Sveltia CMS 后台配置
+# 字段必须与 src/content.config.ts 的 zod schema 保持一致，改一处要同步改另一处
+
+backend:
+  name: github
+  repo: cocoyuplusli/myproject
+  branch: main
+  # sveltia-cms-auth Worker（必须是自定义域名，workers.dev 国内打不开）
+  base_url: https://cms-auth.anlair.com
+  commit_messages:
+    create: 'content: 新建 {{collection}} “{{slug}}”'
+    update: 'content: 更新 {{collection}} “{{slug}}”'
+    delete: 'content: 删除 {{collection}} “{{slug}}”'
+    uploadMedia: 'content: 上传图片 “{{path}}”'
+    deleteMedia: 'content: 删除图片 “{{path}}”'
+
+# 全局图片目录（顶层只允许绝对路径）；产品和分类在各自集合里覆盖为 Astro 需要的相对路径
+media_folder: src/assets
+public_folder: /src/assets
+
+collections:
+  - name: products
+    label: Products
+    label_singular: Product
+    folder: src/content/products
+    extension: md
+    format: frontmatter
+    create: true
+    slug: '{{title}}'
+    # 每个产品一个图片子目录，frontmatter 中写相对于 md 文件的路径（Astro image() 要求）
+    media_folder: /src/assets/products/{{filename}}
+    public_folder: ../../assets/products/{{filename}}
+    sortable_fields: [order, title]
+    summary: '{{title}}'
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: category
+        label: Category
+        widget: relation
+        collection: categories
+        value_field: '{{slug}}'
+        search_fields: [name]
+        display_fields: [name]
+      - name: images
+        label: Images
+        hint: 第一张作为封面
+        widget: image
+        multiple: true
+        min: 1
+      - name: summary
+        label: Summary
+        hint: 用于列表卡片和搜索引擎描述，最多 200 字符
+        widget: text
+        maxlength: 200
+      - name: specs
+        label: Specifications
+        hint: 参数名 + 参数值，例如 Gain / 10000-20000
+        widget: list
+        min: 1
+        summary: '{{fields.name}}: {{fields.value}}'
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: value, label: Value, widget: string }
+      - { name: featured, label: Featured on home page, widget: boolean, default: false, required: false }
+      - { name: order, label: Order, hint: 数字越小越靠前, widget: number, value_type: int, default: 0, required: false }
+      - { name: body, label: Description, widget: markdown }
+
+  - name: categories
+    label: Categories
+    label_singular: Category
+    folder: src/content/categories
+    extension: json
+    format: json
+    create: true
+    slug: '{{name}}'
+    identifier_field: name
+    media_folder: /src/assets/categories
+    public_folder: ../../assets/categories
+    fields:
+      - { name: name, label: Name, widget: string }
+      - { name: description, label: Description, widget: text, required: false }
+      - { name: cover, label: Cover image, widget: image, required: false }
+      - { name: order, label: Order, hint: 数字越小越靠前, widget: number, value_type: int, default: 0, required: false }
+
+  - name: settings
+    label: Site Settings
+    editor:
+      preview: false
+    files:
+      - name: site
+        label: Company info
+        file: src/data/site.json
+        fields:
+          - { name: name, label: Company name, widget: string }
+          - { name: shortName, label: Short name (logo text), widget: string }
+          - { name: tagline, label: Tagline, widget: string }
+          - { name: email, label: Email, widget: string }
+          - { name: whatsapp, label: WhatsApp number, hint: 只填数字，带国家码，例如 8618200000000, widget: string, pattern: ['^\d+$', '只能填数字'] }
+          - { name: whatsappDisplay, label: WhatsApp (display), widget: string }
+          - { name: address, label: Address, widget: string }
+          - { name: web3formsKey, label: Web3Forms key, hint: 询盘表单密钥，请勿修改, widget: string, readonly: true }
+          - name: about
+            label: About paragraphs
+            widget: list
+            field: { name: paragraph, label: Paragraph, widget: text }

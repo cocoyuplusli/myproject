@@ -75,6 +75,35 @@ npm run deploy
 5. 再查一次 MX，并给公司邮箱发一封测试邮件
 6. 提交 Google Search Console，并提交 `https://你的域名/sitemap-index.xml`
 
-## 以后升级为可视化后台
+## 可视化后台（Sveltia CMS）
 
-内容格式已兼容 Sveltia CMS。届时把仓库迁移到 GitHub，新建一个关联 Git 的 Pages 项目并改绑域名，再加上 `public/admin/` 即可。切换前先让国内同事实测后台的登录和保存。
+后台地址：`https://www.anlair.com/admin/`。配置文件是 `public/admin/config.yml`，字段必须和 `src/content.config.ts` 保持一致，改一处就要同步改另一处。
+
+### 工作原理
+
+后台没有数据库。在后台点「保存」，实际上是用你自己的 GitHub 账号往仓库 `main` 分支提交一次 commit。Cloudflare Workers Builds 发现有新提交后，会自动执行 `npm run build` → `npx wrangler deploy`，大约 1~3 分钟后网站更新。
+
+如果填写的内容不合法，构建会失败，线上网站保持上一个版本，不会被弄坏。构建状态在 Cloudflare 控制台 → Workers & Pages → `curly-sound-7f41` → Deployments 中查看。
+
+### 同事日常使用
+
+1. 打开后台，点「使用 GitHub 登录」
+2. Products：新增或修改产品。图片的第一张作为封面，规格按「参数名 + 参数值」逐行添加
+3. Categories：分类；Site Settings：公司信息、联系方式、About
+4. 点「保存」，几分钟后到网站上确认效果
+5. 同一个产品同一时间只由一个人编辑
+
+### 给新同事开通后台
+
+1. 同事注册 GitHub 账号
+2. 仓库 Settings → Collaborators → 邀请该账号（Write 权限），同事需在邮件中接受邀请
+
+### 开发者本地调试后台
+
+`npm run dev` 后，用 Chrome 或 Edge 打开 `http://localhost:4321/admin/index.html`（开发模式下必须带 `index.html`，只写 `/admin/` 会 404；线上不受影响），点「使用本地仓库」并选择项目根目录。这种模式直接修改本地文件，不需要登录。改完后执行 `npm run build` 确认通过，再提交。
+
+### 一次性配置（已完成后可忽略）
+
+- **自动发布**：Cloudflare → `curly-sound-7f41` → Settings → Builds → Connect 到本仓库 `main` 分支；Build command 填 `npm run build`，Deploy command 填 `npx wrangler deploy`。Node 版本由仓库根目录的 `.node-version` 指定
+- **登录服务**：部署 [sveltia-cms-auth](https://github.com/sveltia/sveltia-cms-auth)，并绑定自定义域名 `cms-auth.anlair.com`（`workers.dev` 在国内打不开）
+- **GitHub OAuth App**：Homepage 填 `https://www.anlair.com`，Callback 填 `https://cms-auth.anlair.com/callback`；把 Client ID、Client Secret 分别填到登录服务的 `GITHUB_CLIENT_ID`、`GITHUB_CLIENT_SECRET`（Secret 类型），再设置 `ALLOWED_DOMAINS=www.anlair.com`
