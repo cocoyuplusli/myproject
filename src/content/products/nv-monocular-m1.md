@@ -1,5 +1,5 @@
 ---
-title: Night Vision Monocular M1
+title: testchangename
 category: night-vision-devices
 images:
   - ../../assets/products/testchangename/1.jpg
