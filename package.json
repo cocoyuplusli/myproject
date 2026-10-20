@@ -10,7 +10,7 @@
     "check": "astro check",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "deploy": "npm run build && wrangler pages deploy dist --project-name=company-site-yu",
+    "deploy": "npm run build && wrangler deploy",
     "astro": "astro"
   },
   "dependencies": {

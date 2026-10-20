@@ -1,15 +1,15 @@
 {
-	"name": "Your Company Co., Ltd.",
-	"shortName": "YourCompany",
-	"tagline": "Image intensifier tubes and night vision devices, made in our own factory.",
-	"email": "sales@example.com",
-	"whatsapp": "8613800000000",
-	"whatsappDisplay": "+86 138 0000 0000",
-	"address": "No. 1 Example Road, Example District, Example City, China",
-	"web3formsKey": "YOUR_WEB3FORMS_ACCESS_KEY",
-	"about": [
-		"We are a manufacturer specialising in image intensifier tubes and night vision devices, with in-house production, testing and quality control.",
-		"Our products are exported to customers worldwide. We support OEM / ODM projects and can customise specifications to your requirements.",
-		"Contact us for datasheets, samples and quotations — we usually reply within one business day."
-	]
+  "name": "Your Company Co., Ltd.",
+  "shortName": "YourCompany",
+  "tagline": "Image intensifier tubes and night vision devices, made in our own factory.",
+  "email": "admin@anlair.com",
+  "whatsapp": "8618236965933",
+  "whatsappDisplay": "+86 18236965933",
+  "address": "No. 1 Example Road, Example District, Example City, China",
+  "web3formsKey": "b4d53dec-66e7-406d-a15b-a076630461a7",
+  "about": [
+    "We are a manufacturer specialising in image intensifier tubes and night vision devices, with in-house production, testing and quality control.",
+    "Our products are exported to customers worldwide. We support OEM / ODM projects and can customise specifications to your requirements.",
+    "Contact us for datasheets, samples and quotations — we usually reply within one business day."
+  ]
 }
