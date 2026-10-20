@@ -15,8 +15,9 @@ backend:
     deleteMedia: 'content: 删除图片 “{{path}}”'
 
 # 全局图片目录（顶层只允许绝对路径）；产品和分类在各自集合里覆盖为 Astro 需要的相对路径
-media_folder: src/assets
-public_folder: /src/assets
+# 放在单独子目录，避免从「所有素材」上传的图片散落在 src/assets 根目录
+media_folder: src/assets/uploads
+public_folder: /src/assets/uploads
 
 collections:
   - name: products
@@ -27,9 +28,10 @@ collections:
     format: frontmatter
     create: true
     slug: '{{title}}'
-    # 每个产品一个图片子目录，frontmatter 中写相对于 md 文件的路径（Astro image() 要求）
-    media_folder: /src/assets/products/{{filename}}
-    public_folder: ../../assets/products/{{filename}}
+    # frontmatter 中写相对于 md 文件的路径（Astro image() 要求）
+    # 不用 {{filename}} 分子目录：新建产品在首次保存前没有文件名，会回退到全局目录
+    media_folder: /src/assets/products
+    public_folder: ../../assets/products
     sortable_fields: [order, title]
     summary: '{{title}}'
     fields:
