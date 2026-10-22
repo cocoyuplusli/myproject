@@ -20,9 +20,12 @@ const { items } = Astro.props;
 
 <style>
 	.breadcrumb {
-		padding: 16px 0;
-		font-size: 0.9rem;
+		padding: 28px 0 20px;
+		font-size: 0.8125rem;
 		color: var(--color-muted);
+	}
+	[aria-current='page'] {
+		color: var(--color-text);
 	}
 	ol {
 		display: flex;
@@ -33,9 +36,14 @@ const { items } = Astro.props;
 	}
 	li + li::before {
 		content: '/';
-		margin: 0 8px;
+		margin: 0 10px;
+		color: var(--color-border);
 	}
 	a {
 		color: var(--color-muted);
+		text-decoration: none;
+	}
+	a:hover {
+		color: var(--color-primary);
 	}
 </style>

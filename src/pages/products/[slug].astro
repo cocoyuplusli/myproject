@@ -54,8 +54,10 @@ const jsonLd = {
 		<div class="product">
 			<Gallery images={images} alt={title} />
 			<div class="product__info">
+				<p class="eyebrow">{category.data.name}</p>
 				<h1>{title}</h1>
 				<p class="product__summary">{summary}</p>
+				<h2 class="product__label">Specifications</h2>
 				<SpecTable specs={specs} />
 				<div class="product__actions">
 					<a class="btn" href="#inquiry">Get a Quote</a>
@@ -64,23 +66,28 @@ const jsonLd = {
 			</div>
 		</div>
 
-		<section class="section">
+		<section class="block">
+			<p class="eyebrow">Overview</p>
 			<h2 class="section-title">Product Details</h2>
 			<div class="prose"><Content /></div>
 		</section>
 
-		<section class="section section--inquiry">
-			<h2 class="section-title">Send an Inquiry</h2>
-			<p>
-				Leave your requirements and we will reply within one business day. You can also email
-				<a href={`mailto:${site.email}`}>{site.email}</a>.
-			</p>
+		<section class="block inquiry">
+			<div class="inquiry__intro">
+				<p class="eyebrow">Inquiry</p>
+				<h2 class="section-title">Send an Inquiry</h2>
+				<p class="lead">
+					Leave your requirements and we will reply within one business day. You can also email
+					<a href={`mailto:${site.email}`}>{site.email}</a>.
+				</p>
+			</div>
 			<InquiryForm product={title} />
 		</section>
 
 		{
 			related.length > 0 && (
-				<section class="section">
+				<section class="block">
+					<p class="eyebrow">More</p>
 					<h2 class="section-title">Related Products</h2>
 					<div class="grid">
 						{related.map((p) => (
@@ -96,30 +103,57 @@ const jsonLd = {
 <style>
 	.product {
 		display: grid;
-		gap: 32px;
+		gap: 40px;
 		grid-template-columns: minmax(0, 1fr);
+		padding-bottom: 24px;
 	}
 	@media (min-width: 900px) {
 		.product {
 			grid-template-columns: minmax(0, 560px) minmax(0, 1fr);
+			gap: 56px;
 			align-items: start;
 		}
 	}
 	.product__info h1 {
-		margin: 0 0 12px;
-		font-size: 1.75rem;
+		margin: 0 0 16px;
 	}
 	.product__summary {
-		margin: 0 0 20px;
+		margin: 0 0 32px;
 		color: var(--color-muted);
+		font-size: 1.0625rem;
+	}
+	.product__label {
+		margin: 0 0 12px;
+		color: var(--color-text);
+		font-family: var(--font);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
 	}
 	.product__actions {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 12px;
-		margin-top: 24px;
+		margin-top: 32px;
 	}
-	.section--inquiry {
-		max-width: 760px;
+	/* 详情页各块之间用细线分隔 */
+	.block {
+		margin-top: calc(var(--section-space) * 0.75);
+		padding-top: calc(var(--section-space) * 0.75);
+		border-top: 1px solid var(--color-border);
+	}
+	.inquiry {
+		display: grid;
+		gap: 32px 72px;
+		grid-template-columns: minmax(0, 1fr);
+	}
+	@media (min-width: 900px) {
+		.inquiry {
+			grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+		}
+	}
+	.inquiry .lead {
+		margin: 0;
 	}
 </style>

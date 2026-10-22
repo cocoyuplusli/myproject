@@ -1,55 +1,106 @@
 ---
 import site from '../data/site.json';
 import { whatsappUrl } from '../lib/content';
+
+const links = [
+	{ href: '/products/', label: 'Products' },
+	{ href: '/about/', label: 'About Us' },
+	{ href: '/contact/', label: 'Contact' },
+];
 ---
 
 <footer class="footer">
 	<div class="container footer__inner">
-		<div>
-			<p class="footer__name">{site.name}</p>
-			<p>{site.address}</p>
+		<div class="footer__brand">
+			<p class="footer__name">{site.shortName}</p>
+			<p>{site.tagline}</p>
 		</div>
-		<ul class="footer__contact">
-			<li>Email: <a href={`mailto:${site.email}`}>{site.email}</a></li>
-			<li>
-				WhatsApp: <a href={whatsappUrl()} target="_blank" rel="noopener">{site.whatsappDisplay}</a>
-			</li>
-		</ul>
+		<div>
+			<p class="footer__heading">Company</p>
+			<ul class="footer__list">
+				{
+					links.map((l) => (
+						<li>
+							<a href={l.href}>{l.label}</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+		<div>
+			<p class="footer__heading">Contact</p>
+			<ul class="footer__list">
+				<li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+				<li>
+					<a href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp {site.whatsappDisplay}</a>
+				</li>
+				<li>{site.address}</li>
+			</ul>
+		</div>
 	</div>
 	<div class="container footer__copy">© {new Date().getFullYear()} {site.name}. All rights reserved.</div>
 </footer>
 
 <style>
 	.footer {
-		margin-top: 48px;
-		padding: 32px 0 16px;
-		background: #1d232b;
-		color: #c9cfd6;
-		font-size: 0.95rem;
+		margin-top: var(--section-space);
+		padding: 64px 0 24px;
+		border-top: 1px solid var(--color-border);
+		background: var(--color-bg-soft);
+		color: var(--color-muted);
+		font-size: var(--fs-small);
 	}
 	.footer a {
-		color: #fff;
+		color: var(--color-muted);
+		text-decoration: none;
+		transition: color 0.2s;
+	}
+	.footer a:hover {
+		color: var(--color-primary);
 	}
 	.footer__inner {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: space-between;
-		gap: 16px 48px;
+		display: grid;
+		gap: 40px;
+		grid-template-columns: minmax(0, 1fr);
+	}
+	@media (min-width: 760px) {
+		.footer__inner {
+			grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1.2fr);
+		}
+	}
+	.footer p {
+		margin: 0;
+	}
+	.footer__brand p + p {
+		max-width: 340px;
+		margin-top: 12px;
 	}
 	.footer__name {
-		margin-top: 0;
-		color: #fff;
-		font-weight: 700;
+		font-family: var(--font-heading);
+		font-size: 1.25rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		color: var(--color-text);
 	}
-	.footer__contact {
+	.footer__heading {
+		margin-bottom: 14px !important;
+		color: var(--color-text);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+	}
+	.footer__list {
+		display: grid;
+		gap: 10px;
 		margin: 0;
 		padding: 0;
 		list-style: none;
 	}
 	.footer__copy {
-		margin-top: 24px;
-		padding-top: 16px;
-		border-top: 1px solid #343c47;
-		font-size: 0.85rem;
+		margin-top: 48px;
+		padding-top: 20px;
+		border-top: 1px solid var(--color-border);
+		font-size: 0.8125rem;
 	}
 </style>

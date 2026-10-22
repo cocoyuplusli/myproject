@@ -9,21 +9,47 @@ import factory from '../assets/about/factory.jpg';
 <BaseLayout title="About Us" description={site.about[0]}>
 	<div class="container">
 		<Breadcrumb items={[{ label: 'About Us' }]} />
-		<div class="about">
+		<header class="page-head">
+			<p class="eyebrow">About Us</p>
 			<h1>About {site.name}</h1>
-			{site.about.map((p) => <p>{p}</p>)}
+		</header>
+		<div class="about">
+			<div class="about__text">
+				{site.about.map((p, i) => <p class={i === 0 ? 'lead' : undefined}>{p}</p>)}
+				<p><a class="btn" href="/contact/">Contact Us</a></p>
+			</div>
 			<Image src={factory} alt={`${site.name} factory`} width={1200} class="about__img" />
-			<p><a class="btn" href="/contact/">Contact Us</a></p>
 		</div>
 	</div>
 </BaseLayout>
 
 <style>
 	.about {
-		max-width: 900px;
+		display: grid;
+		gap: 40px 72px;
+		grid-template-columns: minmax(0, 1fr);
+		padding-top: 48px;
+	}
+	@media (min-width: 900px) {
+		.about {
+			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+			align-items: start;
+		}
+	}
+	.about__text {
+		color: #2a3440;
+	}
+	.about__text p:first-child {
+		margin-top: 0;
+		color: var(--color-text);
+	}
+	.about__text p:last-child {
+		margin-top: 32px;
 	}
 	.about__img {
-		margin: 32px 0;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		object-fit: cover;
 		border-radius: var(--radius);
 	}
 </style>

@@ -3,120 +3,266 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import site from '../data/site.json';
-import { categoryUrl, getCategories, getProducts } from '../lib/content';
+import {
+  categoryUrl,
+  getCategories,
+  getProducts,
+  productUrl
+} from '../lib/content';
+import factory from '../assets/about/factory.jpg';
 
 const featured = await getProducts((p) => p.data.featured);
 const categories = await getCategories();
+// 横幅右侧主图：优先取第一个推荐产品
+const heroProduct = featured[0] ?? (await getProducts())[0];
 ---
 
 <BaseLayout>
-	<section class="hero">
-		<div class="container">
-			<h1>{site.name}</h1>
-			<p class="hero__tagline">{site.tagline}</p>
-			<div class="hero__actions">
-				<a class="btn" href="/products/">View Products</a>
-				<a class="btn btn--outline hero__contact" href="/contact/">Contact Us</a>
-			</div>
-		</div>
-	</section>
+  <section class="hero">
+    <div class="container hero__inner">
+      <div class="hero__text">
+        <p class="eyebrow">{site.shortName}</p>
+        <h1>{site.name}</h1>
+        <p class="hero__tagline">{site.tagline}</p>
+        <div class="hero__actions">
+          <a class="btn" href="/products/">View Products</a>
+          <a class="btn btn--outline" href="/contact/">Contact Us</a>
+        </div>
+      </div>
+      {
+        heroProduct && (
+          <a class="hero__media" href={productUrl(heroProduct.id)}>
+            <Image
+              src={heroProduct.data.images[0]}
+              alt={heroProduct.data.title}
+              width={720}
+              height={540}
+              loading="eager"
+              fetchpriority="high"
+            />
+            <span class="hero__caption">{heroProduct.data.title}</span>
+          </a>
+        )
+      }
+    </div>
+  </section>
 
-	{
-		featured.length > 0 && (
-			<section class="section">
-				<div class="container">
-					<h2 class="section-title">Featured Products</h2>
-					<div class="grid">
-						{featured.map((p) => (
-							<ProductCard product={p} />
-						))}
-					</div>
-				</div>
-			</section>
-		)
-	}
+  {
+    featured.length > 0 && (
+      <section class="section">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Products</p>
+              <h2 class="section-title">Featured Products</h2>
+            </div>
+            <a class="link-arrow" href="/products/">
+              All products
+            </a>
+          </div>
+          <div class="grid">
+            {featured.map((p) => (
+              <ProductCard product={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
-	<section class="section section--soft">
-		<div class="container">
-			<h2 class="section-title">Product Categories</h2>
-			<div class="grid">
-				{
-					categories.map((c) => (
-						<a class="category" href={categoryUrl(c.id)}>
-							{c.data.cover && <Image src={c.data.cover} alt={c.data.name} width={600} height={400} />}
-							<span class="category__name">{c.data.name}</span>
-						</a>
-					))
-				}
-			</div>
-		</div>
-	</section>
+  <section class="section section--soft">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Categories</p>
+          <h2 class="section-title">Product Categories</h2>
+        </div>
+      </div>
+      <div class="grid">
+        {
+          categories.map((c) => (
+            <a class="category" href={categoryUrl(c.id)}>
+              {c.data.cover && (
+                <div class="category__media">
+                  <Image
+                    src={c.data.cover}
+                    alt={c.data.name}
+                    width={600}
+                    height={400}
+                  />
+                </div>
+              )}
+              <div class="category__body">
+                <span class="category__name">{c.data.name}</span>
+                {c.data.description && (
+                  <span class="category__desc">{c.data.description}</span>
+                )}
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
 
-	<section class="section">
-		<div class="container">
-			<div class="about">
-				<h2 class="section-title">About Us</h2>
-				<p>{site.about[0]}</p>
-				<a class="btn btn--outline" href="/about/">Learn More</a>
-			</div>
-		</div>
-	</section>
+  <section class="section">
+    <div class="container about">
+      <div>
+        <p class="eyebrow">About Us</p>
+        <h2 class="section-title">{site.name}</h2>
+        <p class="lead">{site.about[0]}</p>
+        <a class="btn btn--outline" href="/about/">Learn More</a>
+      </div>
+      <Image
+        src={factory}
+        alt={`${site.name} factory`}
+        width={720}
+        class="about__img"
+      />
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
-	.hero {
-		padding: 72px 0;
-		background: var(--color-primary);
-		color: #fff;
-	}
-	.hero h1 {
-		margin: 0 0 12px;
-		font-size: clamp(1.8rem, 4vw, 2.6rem);
-	}
-	.hero__tagline {
-		max-width: 640px;
-		margin: 0 0 28px;
-		font-size: 1.15rem;
-		opacity: 0.9;
-	}
-	.hero__actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 12px;
-	}
-	.hero .btn {
-		border-color: #fff;
-		background: #fff;
-		color: var(--color-primary);
-	}
-	.hero .hero__contact {
-		background: transparent;
-		color: #fff;
-	}
-	.category {
-		display: block;
-		border-radius: var(--radius);
-		overflow: hidden;
-		background: #fff;
-		border: 1px solid var(--color-border);
-		color: var(--color-text);
-		text-decoration: none;
-	}
-	.category:hover {
-		border-color: var(--color-primary);
-		color: var(--color-primary);
-	}
-	.category img {
-		width: 100%;
-		aspect-ratio: 3 / 2;
-		object-fit: cover;
-	}
-	.category__name {
-		display: block;
-		padding: 14px 16px;
-		font-weight: 600;
-	}
-	.about {
-		max-width: 800px;
-	}
+  /* 浅色横幅：上浅蓝灰到下近白的渐变底色 */
+  .hero {
+    position: relative;
+
+    padding: 40px 0 40px;
+    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(180deg, #eef3f8 0%, #f7f9fb 100%);
+  }
+  .hero__inner {
+    position: relative;
+    display: grid;
+    gap: 48px;
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 900px) {
+    .hero__inner {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: 64px;
+    }
+  }
+  .hero h1 {
+    margin: 0 0 20px;
+    font-size: var(--fs-display);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.08;
+  }
+  .hero__tagline {
+    max-width: 520px;
+    margin: 0 0 36px;
+    color: var(--color-muted);
+    font-size: 1.125rem;
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hero__media {
+    position: relative;
+    display: block;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-bg-soft);
+  }
+  .hero__media img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .hero__caption {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    padding: 6px 12px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--color-text);
+    font-size: 0.8125rem;
+    font-weight: 600;
+  }
+
+  .category {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: border-color 0.25s;
+  }
+  .category:hover {
+    border-color: var(--color-primary);
+  }
+  .category__media {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+  }
+  .category__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+  .category:hover .category__media img {
+    transform: scale(1.04);
+  }
+  .category__body {
+    display: grid;
+    gap: 6px;
+    padding: 20px 22px;
+  }
+  .category__name {
+    font-family: var(--font-heading);
+    font-size: var(--fs-h3);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .category__name::after {
+    content: ' →';
+    color: var(--color-primary);
+  }
+  .category__desc {
+    color: var(--color-muted);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+
+  .about {
+    display: grid;
+    gap: 48px;
+    align-items: center;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  @media (min-width: 900px) {
+    .about {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 72px;
+    }
+  }
+  .about .lead {
+    margin: 0 0 32px;
+  }
+  .about__img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--radius);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .category__media img {
+      transition: none;
+    }
+    .category:hover .category__media img {
+      transform: none;
+    }
+  }
 </style>

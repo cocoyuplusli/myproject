@@ -1,14 +1,38 @@
+/* 字体打包到本地，不依赖 Google Fonts（国内访问慢） */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/manrope';
+
 :root {
-	--color-primary: #1f4e79;
-	--color-primary-dark: #163a5b;
+	/* 颜色：黑白 + 一个主色 + 三级灰（边框 / 浅底 / 次要文字），不要再加灰阶 */
+	--color-primary: #123a5c;
+	--color-primary-dark: #0b2740;
+	--color-primary-soft: #e8eef4;
 	--color-whatsapp: #1fa855;
-	--color-text: #1d232b;
-	--color-muted: #5b6472;
-	--color-border: #dde1e6;
-	--color-bg-soft: #f4f6f8;
-	--radius: 6px;
+	--color-text: #0f1720;
+	--color-muted: #5a6573;
+	--color-border: #e3e7ec;
+	--color-bg-soft: #f6f7f9;
+
+	--radius: 4px;
 	--container: 1200px;
-	--font: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	--section-space: 88px;
+
+	--font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+	--font-heading: 'Manrope Variable', var(--font);
+
+	/* 字号 6 档 */
+	--fs-display: clamp(2.25rem, 4.5vw, 3.25rem);
+	--fs-h1: clamp(1.9rem, 3.2vw, 2.5rem);
+	--fs-h2: clamp(1.5rem, 2.4vw, 2rem);
+	--fs-h3: 1.125rem;
+	--fs-body: 1rem;
+	--fs-small: 0.875rem;
+}
+
+@media (max-width: 720px) {
+	:root {
+		--section-space: 56px;
+	}
 }
 
 *,
@@ -20,8 +44,11 @@
 body {
 	margin: 0;
 	font-family: var(--font);
+	font-size: var(--fs-body);
 	color: var(--color-text);
-	line-height: 1.6;
+	line-height: 1.7;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
 }
 
 img {
@@ -32,31 +59,104 @@ img {
 
 a {
 	color: var(--color-primary);
+	text-underline-offset: 3px;
 }
 
 h1,
 h2,
 h3 {
-	line-height: 1.25;
+	font-family: var(--font-heading);
+	font-weight: 700;
+	line-height: 1.2;
+	letter-spacing: -0.02em;
+	color: var(--color-text);
+}
+
+h1 {
+	font-size: var(--fs-h1);
+	margin: 0 0 16px;
+}
+
+h2 {
+	font-size: var(--fs-h2);
+}
+
+h3 {
+	font-size: var(--fs-h3);
+	letter-spacing: -0.01em;
+}
+
+::selection {
+	background: var(--color-primary);
+	color: #fff;
 }
 
 .container {
 	max-width: var(--container);
 	margin: 0 auto;
-	padding: 0 20px;
+	padding: 0 24px;
 }
 
 .section {
-	padding: 48px 0;
+	padding: var(--section-space) 0;
 }
 
 .section--soft {
 	background: var(--color-bg-soft);
+	border-top: 1px solid var(--color-border);
+	border-bottom: 1px solid var(--color-border);
 }
 
 .section-title {
-	margin: 0 0 24px;
-	font-size: 1.75rem;
+	margin: 0 0 32px;
+	font-size: var(--fs-h2);
+}
+
+/* 分节小标签：标题上方的小号大写文字，例如 PRODUCTS */
+.eyebrow {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	margin: 0 0 12px;
+	color: var(--color-primary);
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+}
+
+.eyebrow::before {
+	content: '';
+	width: 24px;
+	height: 1px;
+	background: currentColor;
+}
+
+.section-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 12px 24px;
+	margin-bottom: 40px;
+}
+
+.section-head .section-title {
+	margin: 0;
+}
+
+.link-arrow {
+	font-size: var(--fs-small);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+.link-arrow::after {
+	content: ' →';
+}
+
+.link-arrow:hover {
+	text-decoration: underline;
 }
 
 .grid {
@@ -66,34 +166,82 @@ h3 {
 }
 
 .btn {
-	display: inline-block;
-	padding: 10px 22px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 46px;
+	padding: 0 26px;
 	border: 1px solid var(--color-primary);
 	border-radius: var(--radius);
 	background: var(--color-primary);
 	color: #fff;
 	font: inherit;
+	font-size: 0.9375rem;
 	font-weight: 600;
+	letter-spacing: 0.01em;
 	text-decoration: none;
 	cursor: pointer;
+	transition:
+		background-color 0.2s,
+		border-color 0.2s,
+		color 0.2s;
 }
 
 .btn:hover {
+	border-color: var(--color-primary-dark);
 	background: var(--color-primary-dark);
 }
 
 .btn--outline {
+	border-color: var(--color-text);
 	background: transparent;
-	color: var(--color-primary);
+	color: var(--color-text);
 }
 
 .btn--outline:hover {
-	background: var(--color-primary);
+	border-color: var(--color-text);
+	background: var(--color-text);
 	color: #fff;
+}
+
+.page-head {
+	padding: 8px 0 40px;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.page-head h1 {
+	margin: 0;
+}
+
+.page-head .lead {
+	max-width: 680px;
+	margin: 12px 0 0;
+}
+
+.lead {
+	color: var(--color-muted);
+	font-size: 1.0625rem;
+}
+
+.prose {
+	max-width: 760px;
+	color: #2a3440;
 }
 
 .prose > :first-child {
 	margin-top: 0;
+}
+
+.prose ul {
+	padding-left: 1.2em;
+}
+
+.prose li {
+	margin: 6px 0;
+}
+
+.prose li::marker {
+	color: var(--color-primary);
 }
 
 .sr-only {

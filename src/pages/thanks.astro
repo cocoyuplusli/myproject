@@ -6,6 +6,7 @@ import site from '../data/site.json';
 <BaseLayout title="Thank You" noindex>
 	<div class="container">
 		<div class="message">
+			<p class="eyebrow">Inquiry sent</p>
 			<h1>Thank you for your inquiry!</h1>
 			<p>We have received your message and will reply within one business day.</p>
 			<p>
@@ -20,7 +21,11 @@ import site from '../data/site.json';
 <style>
 	.message {
 		max-width: 720px;
-		padding-top: 64px;
+		padding-top: 96px;
 		padding-bottom: 32px;
+		color: var(--color-muted);
+	}
+	.message p:last-child {
+		margin-top: 32px;
 	}
 </style>

@@ -9,9 +9,13 @@ import site from '../data/site.json';
 <BaseLayout title="Contact Us" description={`Contact ${site.name} for quotations, samples and datasheets.`}>
 	<div class="container">
 		<Breadcrumb items={[{ label: 'Contact' }]} />
-		<h1>Contact Us</h1>
+		<header class="page-head">
+			<p class="eyebrow">Contact</p>
+			<h1>Contact Us</h1>
+			<p class="lead">Quotations, samples and datasheets — we usually reply within one business day.</p>
+		</header>
 		<div class="contact">
-			<div>
+			<div class="contact__aside">
 				<dl class="contact__info">
 					<dt>Email</dt>
 					<dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
@@ -33,9 +37,9 @@ import site from '../data/site.json';
 <style>
 	.contact {
 		display: grid;
-		gap: 40px;
+		gap: 48px 72px;
 		grid-template-columns: minmax(0, 1fr);
-		padding-bottom: 24px;
+		padding-top: 48px;
 	}
 	@media (min-width: 900px) {
 		.contact {
@@ -43,13 +47,28 @@ import site from '../data/site.json';
 		}
 	}
 	.contact h2 {
-		margin-top: 0;
+		margin: 0 0 24px;
+	}
+	.contact__aside {
+		padding: 32px;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius);
+		background: var(--color-bg-soft);
+		align-self: start;
+	}
+	.contact__info {
+		margin: 0 0 28px;
 	}
 	.contact__info dt {
+		color: var(--color-muted);
+		font-size: 0.75rem;
 		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
 	}
 	.contact__info dd {
-		margin: 0 0 16px;
-		color: var(--color-muted);
+		margin: 4px 0 22px;
+		color: var(--color-text);
+		font-weight: 500;
 	}
 </style>

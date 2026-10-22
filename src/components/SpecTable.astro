@@ -21,21 +21,33 @@ const { specs } = Astro.props;
 </table>
 
 <style>
+	/* datasheet 风格：顶部主色线、隔行浅底、参数名灰色小字、参数值加粗等宽数字 */
 	.specs {
 		width: 100%;
 		border-collapse: collapse;
-		font-size: 0.95rem;
+		border-top: 2px solid var(--color-primary);
+		font-size: var(--fs-small);
+	}
+	tr {
+		border-bottom: 1px solid var(--color-border);
+	}
+	tr:nth-child(even) {
+		background: var(--color-bg-soft);
 	}
 	th,
 	td {
-		padding: 10px 14px;
-		border: 1px solid var(--color-border);
+		padding: 12px 16px;
 		text-align: left;
 		vertical-align: top;
 	}
 	th {
-		width: 45%;
-		background: var(--color-bg-soft);
+		width: 50%;
+		color: var(--color-muted);
+		font-weight: 500;
+	}
+	td {
+		color: var(--color-text);
 		font-weight: 600;
+		font-variant-numeric: tabular-nums;
 	}
 </style>

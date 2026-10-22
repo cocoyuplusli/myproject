@@ -69,23 +69,41 @@ const redirect = new URL('/thanks/', Astro.site).href;
 	}
 	label {
 		display: grid;
-		gap: 6px;
+		gap: 8px;
+		color: var(--color-text);
 		font-weight: 600;
-		font-size: 0.9rem;
+		font-size: 0.8125rem;
+		letter-spacing: 0.02em;
 	}
 	input,
 	textarea {
 		width: 100%;
-		padding: 10px 12px;
-		border: 1px solid var(--color-border);
+		min-height: 48px;
+		padding: 12px 14px;
+		border: 1px solid #cfd6de;
 		border-radius: var(--radius);
+		background: #fff;
+		color: var(--color-text);
 		font: inherit;
+		font-size: var(--fs-body);
 		font-weight: 400;
+		letter-spacing: 0;
+		transition:
+			border-color 0.2s,
+			box-shadow 0.2s;
+	}
+	textarea {
+		resize: vertical;
+	}
+	input:hover,
+	textarea:hover {
+		border-color: var(--color-muted);
 	}
 	input:focus,
 	textarea:focus {
-		outline: 2px solid var(--color-primary);
-		outline-offset: -1px;
+		outline: none;
+		border-color: var(--color-primary);
+		box-shadow: 0 0 0 3px var(--color-primary-soft);
 	}
 	.btn {
 		justify-self: start;

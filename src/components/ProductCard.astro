@@ -1,6 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
+import { getEntry, type CollectionEntry } from 'astro:content';
 import { productUrl } from '../lib/content';
 
 interface Props {
@@ -9,13 +9,18 @@ interface Props {
 
 const { product } = Astro.props;
 const { title, summary, images } = product.data;
+const category = await getEntry(product.data.category);
 ---
 
 <a class="card" href={productUrl(product.id)}>
-	<Image src={images[0]} alt={title} width={480} height={480} class="card__img" />
+	<div class="card__media">
+		<Image src={images[0]} alt={title} width={640} height={480} class="card__img" />
+	</div>
 	<div class="card__body">
+		{category && <p class="card__cat">{category.data.name}</p>}
 		<h3 class="card__title">{title}</h3>
 		<p class="card__summary">{summary}</p>
+		<span class="card__more">View details</span>
 	</div>
 </a>
 
@@ -29,32 +34,72 @@ const { title, summary, images } = product.data;
 		background: #fff;
 		color: var(--color-text);
 		text-decoration: none;
+		transition: border-color 0.25s;
 	}
 	.card:hover {
 		border-color: var(--color-primary);
 	}
-	.card:hover .card__title {
-		color: var(--color-primary);
+	.card__media {
+		aspect-ratio: 4 / 3;
+		overflow: hidden;
+		border-bottom: 1px solid var(--color-border);
+		background: var(--color-bg-soft);
 	}
 	.card__img {
 		width: 100%;
-		aspect-ratio: 1;
+		height: 100%;
 		object-fit: cover;
+		transition: transform 0.5s ease;
+	}
+	.card:hover .card__img {
+		transform: scale(1.04);
 	}
 	.card__body {
-		padding: 16px;
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		padding: 20px 22px 22px;
+	}
+	.card__cat {
+		margin: 0 0 8px;
+		color: var(--color-muted);
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
 	}
 	.card__title {
-		margin: 0 0 8px;
-		font-size: 1.05rem;
+		margin: 0 0 10px;
+		transition: color 0.2s;
+	}
+	.card:hover .card__title {
+		color: var(--color-primary);
 	}
 	.card__summary {
-		margin: 0;
+		margin: 0 0 18px;
 		color: var(--color-muted);
-		font-size: 0.9rem;
+		font-size: var(--fs-small);
+		line-height: 1.6;
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
+	}
+	.card__more {
+		margin-top: auto;
+		color: var(--color-primary);
+		font-size: 0.8125rem;
+		font-weight: 600;
+	}
+	.card__more::after {
+		content: ' →';
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.card__img {
+			transition: none;
+		}
+		.card:hover .card__img {
+			transform: none;
+		}
 	}
 </style>

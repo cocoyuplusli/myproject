@@ -17,9 +17,12 @@ const products = await getProducts((p) => p.data.category.id === category.id);
 <BaseLayout title={category.data.name} description={category.data.description}>
 	<div class="container">
 		<Breadcrumb items={[{ label: 'Products', href: '/products/' }, { label: category.data.name }]} />
-		<h1>{category.data.name}</h1>
-		{category.data.description && <p class="lead">{category.data.description}</p>}
-		<div class="section">
+		<header class="page-head">
+			<p class="eyebrow">Category</p>
+			<h1>{category.data.name}</h1>
+			{category.data.description && <p class="lead">{category.data.description}</p>}
+		</header>
+		<div class="list">
 			{
 				products.length > 0 ? (
 					<div class="grid">
@@ -36,7 +39,7 @@ const products = await getProducts((p) => p.data.category.id === category.id);
 </BaseLayout>
 
 <style>
-	.lead {
-		color: var(--color-muted);
+	.list {
+		padding-top: 48px;
 	}
 </style>
