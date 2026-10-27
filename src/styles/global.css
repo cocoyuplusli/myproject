@@ -3,15 +3,15 @@
 @import '@fontsource-variable/manrope';
 
 :root {
-	/* 颜色：黑白 + 一个主色 + 三级灰（边框 / 浅底 / 次要文字），不要再加灰阶 */
-	--color-primary: #123a5c;
-	--color-primary-dark: #0b2740;
-	--color-primary-soft: #e8eef4;
+	/* 颜色：黑白为主 + 三级灰（边框 / 浅底 / 次要文字），不要再加灰阶。主色即近黑 */
+	--color-primary: #141414;
+	--color-primary-dark: #000;
+	--color-primary-soft: #e6e6e6;
 	--color-whatsapp: #1fa855;
-	--color-text: #0f1720;
-	--color-muted: #5a6573;
-	--color-border: #e3e7ec;
-	--color-bg-soft: #f6f7f9;
+	--color-text: #111;
+	--color-muted: #5f5f5f;
+	--color-border: #e2e2e2;
+	--color-bg-soft: #f5f5f5;
 
 	--radius: 4px;
 	--container: 1200px;

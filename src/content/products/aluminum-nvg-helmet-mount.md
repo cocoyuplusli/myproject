@@ -1,6 +1,6 @@
 ---
 title: Aluminum NVG Helmet Mount
-category: night-vision
+category: accessories
 images:
   - ../../assets/products/aluminum-nvg-helmet-mount-1.jpg
   - ../../assets/products/aluminum-nvg-helmet-mount-2.jpg
@@ -23,7 +23,7 @@ specs:
   - name: Usage
     value: Tactical / Hunting / Outdoor
 featured: false
-order: 3
+order: 31
 ---
 
 The NVG Helmet Mount is a lightweight and durable mounting solution for professional night vision systems. With robust aluminum construction and a secure attachment design, it provides reliable support for PVS-14 style monoculars, tactical NVG setups, hunting and outdoor night operations.

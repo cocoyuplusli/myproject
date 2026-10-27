@@ -3,47 +3,33 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductCard from '../components/ProductCard.astro';
 import site from '../data/site.json';
-import {
-  categoryUrl,
-  getCategories,
-  getProducts,
-  productUrl
-} from '../lib/content';
-import factory from '../assets/about/factory.jpg';
+import { categoryUrl, getCategories, getProducts } from '../lib/content';
+import heroImage from '../assets/home/hero.jpg';
 
 const featured = await getProducts((p) => p.data.featured);
 const categories = await getCategories();
-// 横幅右侧主图：优先取第一个推荐产品
-const heroProduct = featured[0] ?? (await getProducts())[0];
 ---
 
 <BaseLayout>
   <section class="hero">
+    <Image
+      class="hero__bg"
+      src={heroImage}
+      alt=""
+      widths={[960, 1440, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+    />
     <div class="container hero__inner">
       <div class="hero__text">
-        <p class="eyebrow">{site.shortName}</p>
-        <h1>{site.name}</h1>
-        <p class="hero__tagline">{site.tagline}</p>
+        <h1>Night Vision and Thermals</h1>
+        <p class="hero__tagline">For any occasion</p>
         <div class="hero__actions">
-          <a class="btn" href="/products/">View Products</a>
-          <a class="btn btn--outline" href="/contact/">Contact Us</a>
+          <a class="btn btn--ghost" href="/products/">View Products</a>
+          <a class="btn btn--ghost" href="/contact/">Contact Us</a>
         </div>
       </div>
-      {
-        heroProduct && (
-          <a class="hero__media" href={productUrl(heroProduct.id)}>
-            <Image
-              src={heroProduct.data.images[0]}
-              alt={heroProduct.data.title}
-              width={720}
-              height={540}
-              loading="eager"
-              fetchpriority="high"
-            />
-            <span class="hero__caption">{heroProduct.data.title}</span>
-          </a>
-        )
-      }
     </div>
   </section>
 
@@ -113,79 +99,103 @@ const heroProduct = featured[0] ?? (await getProducts())[0];
         <p class="lead">{site.about[0]}</p>
         <a class="btn btn--outline" href="/about/">Learn More</a>
       </div>
-      <Image
-        src={factory}
-        alt={`${site.name} factory`}
-        width={720}
-        class="about__img"
-      />
+      <ul class="why">
+        {site.highlights.map((h) => <li>{h}</li>)}
+      </ul>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  /* 浅色横幅：上浅蓝灰到下近白的渐变底色 */
+  /* 满宽场景图横幅：人物在画面右侧，文字放左侧，左边加暗色渐变保证可读 */
   .hero {
     position: relative;
-
-    padding: 40px 0 40px;
-    border-bottom: 1px solid var(--color-border);
-    background: linear-gradient(180deg, #eef3f8 0%, #f7f9fb 100%);
+    display: flex;
+    align-items: center;
+    min-height: 364px;
+    overflow: hidden;
+    /* 与原图背景色一致，图片左侧渐隐后看不出接缝 */
+    background: #0f1012;
+    color: #fff;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 70% 20%;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  /* 宽屏：横幅高度随宽度变化，图片按高度完整显示并靠右，左侧渐隐留给文字 */
+  @media (min-width: 900px) {
+    .hero {
+      height: clamp(364px, 30.8vw, 574px);
+    }
+    /* 元素尺寸 = 图片本身（16:10），遮罩才会落在图片真实的左边缘 */
+    .hero__bg {
+      left: auto;
+      right: 0;
+      width: auto;
+      height: 100%;
+      aspect-ratio: 16 / 10;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 35%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 35%);
+    }
+    .hero::before {
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.25) 40%, transparent 60%);
+    }
   }
   .hero__inner {
     position: relative;
-    display: grid;
-    gap: 48px;
-    align-items: center;
-    grid-template-columns: minmax(0, 1fr);
+    z-index: 2;
+    width: 100%;
+    padding-top: 48px;
+    padding-bottom: 48px;
   }
-  @media (min-width: 900px) {
-    .hero__inner {
-      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
-      gap: 64px;
-    }
+  .hero__text {
+    max-width: 560px;
   }
   .hero h1 {
-    margin: 0 0 20px;
+    margin: 0 0 14px;
+    color: #fff;
     font-size: var(--fs-display);
     font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1.08;
+    letter-spacing: 0.01em;
+    line-height: 1.05;
+    text-transform: uppercase;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
   }
   .hero__tagline {
-    max-width: 520px;
     margin: 0 0 36px;
-    color: var(--color-muted);
+    color: #d0d0d0;
     font-size: 1.125rem;
+    font-style: italic;
+    font-weight: 600;
   }
   .hero__actions {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
   }
-  .hero__media {
-    position: relative;
-    display: block;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    background: var(--color-bg-soft);
+  /* 参考图样式：白色细边框按钮，悬停反白 */
+  .btn--ghost {
+    border-color: #fff;
+    background: transparent;
+    color: #fff;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
-  .hero__media img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-  }
-  .hero__caption {
-    position: absolute;
-    left: 16px;
-    bottom: 16px;
-    padding: 6px 12px;
-    border-radius: 2px;
-    background: rgba(255, 255, 255, 0.92);
-    color: var(--color-text);
-    font-size: 0.8125rem;
-    font-weight: 600;
+  .btn--ghost:hover {
+    border-color: #fff;
+    background: #fff;
+    color: #000;
   }
 
   .category {
@@ -251,11 +261,33 @@ const heroProduct = featured[0] ?? (await getProducts())[0];
   .about .lead {
     margin: 0 0 32px;
   }
-  .about__img {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
+  .why {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 32px;
+    border: 1px solid var(--color-border);
+    border-top: 2px solid var(--color-text);
     border-radius: var(--radius);
+    background: var(--color-bg-soft);
+    list-style: none;
+  }
+  .why li {
+    position: relative;
+    padding-left: 28px;
+    font-weight: 500;
+  }
+  /* 对勾 */
+  .why li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.45em;
+    width: 12px;
+    height: 7px;
+    border-left: 2px solid var(--color-text);
+    border-bottom: 2px solid var(--color-text);
+    transform: rotate(-45deg);
   }
   @media (prefers-reduced-motion: reduce) {
     .category__media img {

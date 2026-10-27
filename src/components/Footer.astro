@@ -34,29 +34,34 @@ const links = [
 				<li>
 					<a href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp {site.whatsappDisplay}</a>
 				</li>
-				<li>{site.address}</li>
 			</ul>
 		</div>
 	</div>
-	<div class="container footer__copy">© {new Date().getFullYear()} {site.name}. All rights reserved.</div>
+	<div class="footer__bottom">
+		<!-- 公司名已以 "Ltd." 结尾，后面不再加句号 -->
+		<div class="container footer__copy">© {new Date().getFullYear()} {site.name} All rights reserved.</div>
+	</div>
 </footer>
 
 <style>
+	/* 配色与页头一致：主体黑底，底部版权条同顶部联系栏（#111） */
 	.footer {
 		margin-top: var(--section-space);
-		padding: 64px 0 24px;
-		border-top: 1px solid var(--color-border);
-		background: var(--color-bg-soft);
-		color: var(--color-muted);
+		padding-top: 64px;
+		border-top: 1px solid #222;
+		background: #000;
+		color: #9a9a9a;
 		font-size: var(--fs-small);
 	}
 	.footer a {
-		color: var(--color-muted);
+		color: #cfcfcf;
 		text-decoration: none;
 		transition: color 0.2s;
 	}
 	.footer a:hover {
-		color: var(--color-primary);
+		color: #fff;
+		text-decoration: underline;
+		text-underline-offset: 4px;
 	}
 	.footer__inner {
 		display: grid;
@@ -75,18 +80,19 @@ const links = [
 		max-width: 340px;
 		margin-top: 12px;
 	}
+	/* 与页头 Logo 同款 */
 	.footer__name {
 		font-family: var(--font-heading);
-		font-size: 1.25rem;
+		font-size: 1.5rem;
 		font-weight: 800;
-		letter-spacing: -0.03em;
-		color: var(--color-text);
+		letter-spacing: 0.02em;
+		color: #fff;
 	}
 	.footer__heading {
-		margin-bottom: 14px !important;
-		color: var(--color-text);
+		margin-bottom: 16px !important;
+		color: #fff;
 		font-size: 0.75rem;
-		font-weight: 700;
+		font-weight: 600;
 		letter-spacing: 0.14em;
 		text-transform: uppercase;
 	}
@@ -97,10 +103,15 @@ const links = [
 		padding: 0;
 		list-style: none;
 	}
+	.footer__bottom {
+		margin-top: 56px;
+		border-top: 1px solid #222;
+		background: #111;
+	}
 	.footer__copy {
-		margin-top: 48px;
-		padding-top: 20px;
-		border-top: 1px solid var(--color-border);
-		font-size: 0.8125rem;
+		padding-top: 14px;
+		padding-bottom: 14px;
+		font-size: 0.75rem;
+		letter-spacing: 0.02em;
 	}
 </style>

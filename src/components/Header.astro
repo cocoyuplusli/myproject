@@ -1,15 +1,28 @@
 ---
 import site from '../data/site.json';
+import { categoryUrl, getProducts, productUrl, whatsappUrl } from '../lib/content';
 
+// 导航按分类直达；分类 id 即 src/content/categories 下的文件名
 const links = [
-	{ href: '/', label: 'Home' },
-	{ href: '/products/', label: 'Products' },
+	{ href: categoryUrl('night-vision'), label: 'Night Vision', category: 'night-vision' },
+	{ href: categoryUrl('thermal-imaging'), label: 'Thermals', category: 'thermal-imaging' },
+	{ href: categoryUrl('image-intensifier-tubes'), label: 'Intensifier Tubes', category: 'image-intensifier-tubes' },
+	{ href: categoryUrl('accessories'), label: 'Accessories', category: 'accessories' },
 	{ href: '/about/', label: 'About Us' },
 	{ href: '/contact/', label: 'Contact' },
 ];
+const products = await getProducts();
+const productsOf = (category?: string) => (category ? products.filter((p) => p.data.category.id === category) : []);
 const path = Astro.url.pathname;
-const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const isActive = (href: string) => path.startsWith(href);
 ---
+
+<div class="topbar">
+	<div class="container topbar__inner">
+		<a href={`mailto:${site.email}`}>Contact: {site.email}</a>
+		<a href={whatsappUrl()} target="_blank" rel="noopener">WhatsApp: {site.whatsappDisplay}</a>
+	</div>
+</div>
 
 <header class="header">
 	<div class="container header__inner">
@@ -17,13 +30,25 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
 		<nav aria-label="Main">
 			<ul class="header__nav">
 				{
-					links.map((l) => (
-						<li>
-							<a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>
-								{l.label}
-							</a>
-						</li>
-					))
+					links.map((l) => {
+						const items = productsOf(l.category);
+						return (
+							<li class:list={{ 'has-menu': items.length > 0 }}>
+								<a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>
+									{l.label}
+								</a>
+								{items.length > 0 && (
+									<ul class="menu">
+										{items.map((p) => (
+											<li>
+												<a href={productUrl(p.id)}>{p.data.title}</a>
+											</li>
+										))}
+									</ul>
+								)}
+							</li>
+						);
+					})
 				}
 			</ul>
 		</nav>
@@ -31,9 +56,37 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
 </header>
 
 <style>
+	/* 顶部联系方式小字栏 */
+	.topbar {
+		border-bottom: 1px solid #222;
+		background: #111;
+		color: #9a9a9a;
+		font-size: 0.75rem;
+		letter-spacing: 0.02em;
+	}
+	.topbar__inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 4px 28px;
+		min-height: 34px;
+		padding-top: 6px;
+		padding-bottom: 6px;
+	}
+	.topbar a {
+		color: #d6d6d6;
+		text-decoration: none;
+	}
+	.topbar a:hover {
+		color: #fff;
+		text-decoration: underline;
+	}
+	/* 黑色页头 */
 	.header {
-		border-bottom: 1px solid var(--color-border);
-		background: #fff;
+		position: relative;
+		z-index: 20;
+		border-bottom: 1px solid #222;
+		background: #000;
 	}
 	.header__inner {
 		display: flex;
@@ -41,55 +94,115 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWit
 		align-items: center;
 		justify-content: space-between;
 		gap: 8px 32px;
-		min-height: 76px;
+		min-height: 80px;
 		padding-top: 10px;
 		padding-bottom: 10px;
 	}
 	.header__logo {
 		font-family: var(--font-heading);
-		font-size: 1.375rem;
+		font-size: 1.5rem;
 		font-weight: 800;
-		letter-spacing: -0.03em;
-		color: var(--color-text);
+		letter-spacing: 0.02em;
+		color: #fff;
 		text-decoration: none;
 	}
 	.header__nav {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 4px 32px;
+		gap: 4px 28px;
 		margin: 0;
 		padding: 0;
 		list-style: none;
 	}
-	.header__nav a {
+	.header__nav > li {
+		position: relative;
+	}
+	.header__nav > li > a {
 		position: relative;
 		display: inline-block;
-		padding: 6px 0;
-		color: var(--color-muted);
-		font-size: var(--fs-small);
-		font-weight: 600;
-		letter-spacing: 0.06em;
+		padding: 8px 0;
+		color: #cfcfcf;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
 		text-decoration: none;
 		transition: color 0.2s;
 	}
-	.header__nav a:hover,
-	.header__nav a[aria-current='page'] {
-		color: var(--color-text);
+	.header__nav > li > a:hover,
+	.header__nav > li > a[aria-current='page'],
+	.has-menu:hover > a {
+		color: #fff;
 	}
-	/* 当前页：底部一条主色短线 */
-	.header__nav a[aria-current='page']::after {
+	/* 当前页：底部一条白色细线 */
+	.header__nav > li > a[aria-current='page']::after {
 		content: '';
 		position: absolute;
 		left: 0;
 		right: 0;
-		bottom: 0;
-		height: 2px;
-		background: var(--color-primary);
+		bottom: 2px;
+		height: 1px;
+		background: #fff;
+	}
+	/* 有下拉的项加一个小箭头 */
+	.has-menu > a::before {
+		content: '';
+		position: absolute;
+		right: -13px;
+		top: 50%;
+		width: 5px;
+		height: 5px;
+		margin-top: -4px;
+		border-right: 1px solid currentColor;
+		border-bottom: 1px solid currentColor;
+		transform: rotate(45deg);
+	}
+	.has-menu {
+		margin-right: 10px;
+	}
+
+	/* 下拉菜单：悬停或键盘聚焦时显示，仅宽屏 */
+	.menu {
+		display: none;
+	}
+	@media (min-width: 900px) {
+		.menu {
+			position: absolute;
+			left: -20px;
+			top: 100%;
+			min-width: 260px;
+			margin: 0;
+			padding: 12px 0;
+			border: 1px solid #2a2a2a;
+			background: #000;
+			list-style: none;
+		}
+		.has-menu:hover > .menu,
+		.has-menu:focus-within > .menu {
+			display: block;
+		}
+		.menu a {
+			display: block;
+			padding: 8px 20px;
+			color: #cfcfcf;
+			font-size: 0.875rem;
+			line-height: 1.4;
+			text-decoration: none;
+		}
+		.menu a:hover {
+			background: #141414;
+			color: #fff;
+		}
 	}
 	@media (max-width: 560px) {
 		.header__nav {
-			gap: 4px 20px;
+			gap: 4px 18px;
+		}
+		.has-menu {
+			margin-right: 0;
+		}
+		.has-menu > a::before {
+			display: none;
 		}
 	}
 </style>

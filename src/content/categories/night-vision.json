@@ -1,6 +1,6 @@
 {
   "name": "Night Vision",
-  "description": "Night vision monoculars, binoculars and fusion goggles, plus helmet mounts and accessories.",
+  "description": "Night vision monoculars, binoculars and fusion goggles.",
   "cover": "../../assets/categories/night-vision.jpg",
   "order": 1
 }

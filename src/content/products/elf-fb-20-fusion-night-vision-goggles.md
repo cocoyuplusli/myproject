@@ -8,6 +8,8 @@ images:
   - ../../assets/products/elf-fb-20-fusion-night-vision-goggles-4.jpg
 summary: Dual-band fusion night vision goggles combining 18mm Gen2+/Gen3 image tubes with a 640×512 thermal channel. Low-latency fusion imaging, 1280×1024 OLED, IP67.
 specs:
+  - name: Model
+    value: ELF-FB 20
   - name: Infrared Detector
     value: 640×512, 12μm
   - name: Infrared FOV

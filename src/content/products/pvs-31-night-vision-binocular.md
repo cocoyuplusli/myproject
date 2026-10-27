@@ -10,7 +10,7 @@ images:
 summary: PVS-31 style night vision binocular with 40° FOV, 25mm eye relief and IP67 rating. Runs over 20 hours on one AA battery, or over 60 hours with the external pack.
 specs:
   - name: Model
-    value: PVS3114GC
+    value: PVS-31
   - name: Magnification
     value: 1×
   - name: Eye Relief
