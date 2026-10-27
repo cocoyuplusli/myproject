@@ -1,0 +1,6 @@
+# Cloudflare Workers 静态资源的响应头配置（不会作为文件对外提供）
+# HSTS：浏览器记住只用 HTTPS 访问本站，防止被降级到 http 后截获后台登录 token。
+# 暂不加 includeSubDomains / preload：anlair.com 下还有企业邮箱等子域名，
+# 确认它们都支持 HTTPS 之前加上会导致浏览器打不开；preload 提交后撤销要数月。
+/*
+  Strict-Transport-Security: max-age=31536000

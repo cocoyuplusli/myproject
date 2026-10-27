@@ -7,6 +7,9 @@ backend:
   branch: main
   # sveltia-cms-auth Worker（必须是自定义域名，workers.dev 国内打不开）
   base_url: https://cms-auth.anlair.com
+  # 仓库是公开的，只申请公开仓库的读写权限，不拿 repo（会包含登录者所有私有仓库）
+  # 若以后把仓库改为私有，需改回 repo，否则后台无法保存
+  auth_scope: public_repo
   commit_messages:
     create: 'content: 新建 {{collection}} “{{slug}}”'
     update: 'content: 更新 {{collection}} “{{slug}}”'
