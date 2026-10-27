@@ -1,6 +1,6 @@
 {
-	"name": "Image Intensifier Tubes",
-	"description": "Gen2+ and Gen3 image intensifier tubes with high FOM and low halo.",
-	"cover": "../../assets/categories/image-intensifier-tubes.jpg",
-	"order": 1
+  "name": "Image Intensifier Tubes",
+  "description": "NNVT Gen2+ 18mm image intensifier tubes in MX10160, MX10130 and other formats, each supplied with its own test report.",
+  "cover": "../../assets/categories/image-intensifier-tubes.jpg",
+  "order": 3
 }

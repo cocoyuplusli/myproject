@@ -1,15 +1,24 @@
 {
-  "name": "Your Company Co., Ltd.",
-  "shortName": "YourCompany",
-  "tagline": "Image intensifier tubes and night vision devices, made in our own factory.",
+  "name": "Zhengzhou Anlair Technology Co., Ltd.",
+  "shortName": "ANLAIR",
+  "tagline": "Night Vision and Thermal Devices in China",
   "email": "admin@anlair.com",
   "whatsapp": "8618236965933",
-  "whatsappDisplay": "+86 18236965933",
-  "address": "No. 1 Example Road, Example District, Example City, China",
+  "whatsappDisplay": "+86 182 3696 5933",
+  "address": "Room 207, Unit 1, Building 2, No. 16 Yulan West Street, High-tech Industrial Development Zone, Zhengzhou, Henan, China",
   "web3formsKey": "b4d53dec-66e7-406d-a15b-a076630461a7",
   "about": [
-    "We are a manufacturer specialising in image intensifier tubes and night vision devices, with in-house production, testing and quality control.",
-    "Our products are exported to customers worldwide. We support OEM / ODM projects and can customise specifications to your requirements.",
-    "Contact us for datasheets, samples and quotations — we usually reply within one business day."
+    "Created to provide unmatched product knowledge and expertise in night vision and thermal devices, Zhengzhou Anlair Technology is dedicated to providing cutting-edge electro-optics, raising standards of end-user education, and offering unparalleled customer service and support.",
+    "Interested in upgrading? Need a purge or collimation service? Want a build done? We are happy to help — send us an email with what you would like to trade in and we will help you out."
+  ],
+  "highlights": [
+    "ISO 9001:2015 certified quality management system",
+    "Experienced R&D team and industry experts",
+    "Decades of engineering experience",
+    "Integrated design, manufacturing, testing and quality control",
+    "Advanced optical and thermal imaging testing facilities",
+    "Reliable mass production and global supply chain support",
+    "Flexible OEM & ODM services",
+    "Strict product validation and quality assurance"
   ]
 }

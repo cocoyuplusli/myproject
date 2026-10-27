@@ -1,9 +1,7 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
 import site from '../data/site.json';
-import factory from '../assets/about/factory.jpg';
 ---
 
 <BaseLayout title="About Us" description={site.about[0]}>
@@ -18,7 +16,12 @@ import factory from '../assets/about/factory.jpg';
 				{site.about.map((p, i) => <p class={i === 0 ? 'lead' : undefined}>{p}</p>)}
 				<p><a class="btn" href="/contact/">Contact Us</a></p>
 			</div>
-			<Image src={factory} alt={`${site.name} factory`} width={1200} class="about__img" />
+			<aside class="why">
+				<h2 class="why__title">Why Choose Us</h2>
+				<ul class="why__list">
+					{site.highlights.map((h) => <li>{h}</li>)}
+				</ul>
+			</aside>
 		</div>
 	</div>
 </BaseLayout>
@@ -46,10 +49,40 @@ import factory from '../assets/about/factory.jpg';
 	.about__text p:last-child {
 		margin-top: 32px;
 	}
-	.about__img {
-		width: 100%;
-		aspect-ratio: 4 / 3;
-		object-fit: cover;
+	.why {
+		padding: 32px;
+		border: 1px solid var(--color-border);
+		border-top: 2px solid var(--color-primary);
 		border-radius: var(--radius);
+		background: var(--color-bg-soft);
+	}
+	.why__title {
+		margin: 0 0 20px;
+		font-size: var(--fs-h3);
+	}
+	.why__list {
+		display: grid;
+		gap: 12px;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.why__list li {
+		position: relative;
+		padding-left: 28px;
+		color: var(--color-text);
+		font-weight: 500;
+	}
+	/* 对勾 */
+	.why__list li::before {
+		content: '';
+		position: absolute;
+		left: 2px;
+		top: 0.45em;
+		width: 12px;
+		height: 7px;
+		border-left: 2px solid var(--color-primary);
+		border-bottom: 2px solid var(--color-primary);
+		transform: rotate(-45deg);
 	}
 </style>

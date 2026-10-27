@@ -105,3 +105,8 @@ collections:
             label: About paragraphs
             widget: list
             field: { name: paragraph, label: Paragraph, widget: text }
+          - name: highlights
+            label: Why Choose Us
+            hint: About 页右侧的要点列表，每条一句
+            widget: list
+            field: { name: item, label: Item, widget: string }
